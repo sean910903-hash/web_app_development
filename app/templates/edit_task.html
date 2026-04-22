@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}編輯任務{% endblock %}
+
+{% block content %}
+<h2>編輯任務</h2>
+
+<form method="POST" class="task-form">
+    <label for="title">任務名稱</label>
+    <input type="text" id="title" name="title" value="{{ task.title }}" required>
+
+    <label for="description">任務說明</label>
+    <textarea id="description" name="description" rows="5">{{ task.description }}</textarea>
+
+    <label for="due_date">截止日期</label>
+    <input type="date" id="due_date" name="due_date" value="{{ task.due_date }}">
+
+    <button type="submit">儲存修改</button>
+</form>
+{% endblock %}

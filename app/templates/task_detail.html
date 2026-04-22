@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}任務詳情{% endblock %}
+
+{% block content %}
+<div class="task-card">
+    <h2>{{ task.title }}</h2>
+
+    <p><strong>任務說明：</strong></p>
+    <p>{{ task.description or "沒有任務說明" }}</p>
+
+    <p><strong>截止日期：</strong> {{ task.due_date or "未設定" }}</p>
+    <p>
+        <strong>完成狀態：</strong>
+        {% if task.completed %}
+        <span class="done">已完成</span>
+        {% else %}
+        <span class="pending">未完成</span>
+        {% endif %}
+    </p>
+
+    <div class="actions">
+        <a href="{{ url_for('task.edit_task', task_id=task.id) }}">編輯</a>
+        <a href="{{ url_for('task.index') }}">返回列表</a>
+
+        <form method="POST" action="{{ url_for('task.toggle_task', task_id=task.id) }}">
+            <button type="submit">
+                {% if task.completed %}標記為未完成{% else %}標記為完成{% endif %}
+            </button>
+        </form>
+
+        <form method="POST" action="{{ url_for('task.delete_task', task_id=task.id) }}"
+            onsubmit="return confirm('確定要刪除這個任務嗎？');">
+            <button type="submit">刪除</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

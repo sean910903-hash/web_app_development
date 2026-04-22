@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}任務列表{% endblock %}
+
+{% block content %}
+<section class="toolbar">
+    <form method="GET" action="{{ url_for('task.index') }}" class="search-form">
+        <input type="text" name="q" placeholder="搜尋任務..." value="{{ keyword }}">
+        <select name="status">
+            <option value="">全部狀態</option>
+            <option value="completed" {% if status=="completed" %}selected{% endif %}>已完成</option>
+            <option value="incomplete" {% if status=="incomplete" %}selected{% endif %}>未完成</option>
+        </select>
+        <button type="submit">搜尋</button>
+    </form>
+</section>
+
+<section class="task-list">
+    {% if tasks %}
+    {% for task in tasks %}
+    <div class="task-card">
+        <h3>
+            <a href="{{ url_for('task.task_detail', task_id=task.id) }}">
+                {{ task.title }}
+            </a>
+        </h3>
+
+        <p>{{ task.description or "沒有任務說明" }}</p>
+
+        <p>截止日期：{{ task.due_date or "未設定" }}</p>
+        <p>
+            狀態：
+            {% if task.completed %}
+            <span class="done">已完成</span>
+            {% else %}
+            <span class="pending">未完成</span>
+            {% endif %}
+        </p>
+
+        <div class="actions">
+            <a href="{{ url_for('task.task_detail', task_id=task.id) }}">查看</a>
+            <a href="{{ url_for('task.edit_task', task_id=task.id) }}">編輯</a>
+
+            <form method="POST" action="{{ url_for('task.toggle_task', task_id=task.id) }}">
+                <button type="submit">
+                    {% if task.completed %}標記為未完成{% else %}標記為完成{% endif %}
+                </button>
+            </form>
+
+            <form method="POST" action="{{ url_for('task.delete_task', task_id=task.id) }}"
+                onsubmit="return confirm('確定要刪除這個任務嗎？');">
+                <button type="submit">刪除</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>目前沒有任務資料。</p>
+    {% endif %}
+</section>
+{% endblock %}
